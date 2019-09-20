@@ -44,6 +44,9 @@
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <action selector="nameTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="gdf-mI-Bdq"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                     </stackView>
@@ -64,6 +67,9 @@
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <action selector="ageTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="Lvz-rl-GuG"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                     </stackView>
@@ -84,6 +90,9 @@
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <action selector="majorTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="UYn-di-Xia"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                     </stackView>
@@ -100,6 +109,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fhe-XK-c0i">
                                 <rect key="frame" x="182.5" y="390" width="49" height="30"/>
                                 <state key="normal" title="Upload"/>
+                                <connections>
+                                    <action selector="uploadButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DW4-ep-F8Z"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -115,6 +127,12 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="ageTextField" destination="RbN-lo-B7H" id="klG-nZ-aQ6"/>
+                        <outlet property="majorTextField" destination="T5W-1I-7LN" id="0al-FX-hBr"/>
+                        <outlet property="nameTextField" destination="6a3-4d-plw" id="GaL-Hi-JP9"/>
+                        <outlet property="uploadButton" destination="fhe-XK-c0i" id="s96-D5-CS2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
