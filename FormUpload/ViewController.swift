@@ -11,11 +11,18 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    // Dropbox variables
+    var client: DropboxClient?
+    
+    // File variables
+    let fileName = "responses.txt"
+    
     // MARK - UI Outlets
     @IBOutlet var nameTextField: UITextField!
     @IBOutlet var ageTextField: UITextField!
     @IBOutlet var majorTextField: UITextField!
     @IBOutlet var uploadButton: UIButton!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,15 +50,17 @@ class ViewController: UIViewController {
     }
     
     @IBAction func uploadButtonPressed(_ sender: Any) {
-        // Upload answers to dropbox
+        // Upload form responses to dropbox
+        uploadFileToDropbox()
+    }
+    
+    @IBAction func logInButtonPressed(_ sender: Any) {
         DropboxClientsManager.authorizeFromController(
             UIApplication.shared,
             controller: self,
             openURL: { (url: URL) -> Void in
-                //UIApplication.shared.openURL(url)
                 UIApplication.shared.open(url, options: .init(), completionHandler: nil)
         })
-        createFormResponsesTextFile()
     }
     
     func condenseRepsonsesToString() -> String {
@@ -61,21 +70,23 @@ class ViewController: UIViewController {
         return "Name:\(name)  Age:\(age)  Major:\(major)"
     }
     
-    func createFormResponsesTextFile() -> Data? {
+    func uploadFileToDropbox() {
         let responses = condenseRepsonsesToString()
-        let tempFileName = "responses.txt"
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
+        let fileData = responses.data(using: String.Encoding.utf8, allowLossyConversion: false)!
+        let filePath = "/\(fileName)"
+        client = DropboxClientsManager.authorizedClient
+        
+        let _ = client?.files.upload(path: filePath, mode: .overwrite,input: fileData)
+            .response { response, error in
+                if let response = response {
+                    print(response)
+                } else if let error = error {
+                    print(error)
+                }
+            }
+            .progress { progressData in
+                print(progressData)
         }
-        let tempFilePath = documentsDirectory.appendingPathComponent(tempFileName)
-        print(tempFilePath)
-        do {
-            try responses.write(to: tempFilePath, atomically: false, encoding: String.Encoding.utf8)
-        }
-        catch {
-            print("Failed to write to file!")
-        }
-        return FileManager.default.contents(atPath: tempFileName)
     }
 }
 

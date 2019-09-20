@@ -45,7 +45,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
-                                                    <action selector="nameTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="gdf-mI-Bdq"/>
+                                                    <action selector="nameTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="77N-kd-6cU"/>
                                                 </connections>
                                             </textField>
                                         </subviews>
@@ -68,7 +68,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
-                                                    <action selector="ageTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="Lvz-rl-GuG"/>
+                                                    <action selector="ageTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="qRY-gR-8fD"/>
                                                 </connections>
                                             </textField>
                                         </subviews>
@@ -91,7 +91,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
-                                                    <action selector="majorTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="UYn-di-Xia"/>
+                                                    <action selector="majorTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="yF5-Xr-SHp"/>
                                                 </connections>
                                             </textField>
                                         </subviews>
@@ -113,12 +113,21 @@
                                     <action selector="uploadButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DW4-ep-F8Z"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QSc-zj-CaR">
+                                <rect key="frame" x="186" y="435" width="42" height="30"/>
+                                <state key="normal" title="Log In"/>
+                                <connections>
+                                    <action selector="logInButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bgx-ac-Bqs"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="fhe-XK-c0i" firstAttribute="top" secondItem="5MO-MC-rD9" secondAttribute="bottom" constant="40" id="Jbo-4y-tN1"/>
                             <constraint firstItem="UCd-se-cCL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="PcE-cR-igN"/>
                             <constraint firstItem="5MO-MC-rD9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="QeK-Oh-ajJ"/>
+                            <constraint firstItem="QSc-zj-CaR" firstAttribute="top" secondItem="fhe-XK-c0i" secondAttribute="bottom" constant="15" id="VoD-ax-k9W"/>
+                            <constraint firstItem="QSc-zj-CaR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="f6g-IA-8vE"/>
                             <constraint firstItem="5MO-MC-rD9" firstAttribute="top" secondItem="UCd-se-cCL" secondAttribute="bottom" constant="20" id="fWd-U8-69U"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5MO-MC-rD9" secondAttribute="trailing" constant="30" id="flh-Es-KLO"/>
                             <constraint firstItem="fhe-XK-c0i" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hCM-as-A52"/>
@@ -129,7 +138,7 @@
                     </view>
                     <connections>
                         <outlet property="ageTextField" destination="RbN-lo-B7H" id="klG-nZ-aQ6"/>
-                        <outlet property="majorTextField" destination="T5W-1I-7LN" id="0al-FX-hBr"/>
+                        <outlet property="majorTextField" destination="T5W-1I-7LN" id="HsN-N6-pkA"/>
                         <outlet property="nameTextField" destination="6a3-4d-plw" id="GaL-Hi-JP9"/>
                         <outlet property="uploadButton" destination="fhe-XK-c0i" id="s96-D5-CS2"/>
                     </connections>
