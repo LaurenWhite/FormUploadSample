@@ -51,6 +51,31 @@ class ViewController: UIViewController {
                 //UIApplication.shared.openURL(url)
                 UIApplication.shared.open(url, options: .init(), completionHandler: nil)
         })
+        createFormResponsesTextFile()
+    }
+    
+    func condenseRepsonsesToString() -> String {
+        let name = nameTextField.text ?? "N/A"
+        let age = ageTextField.text ?? "N/A"
+        let major = majorTextField.text ?? "N/A"
+        return "Name:\(name)  Age:\(age)  Major:\(major)"
+    }
+    
+    func createFormResponsesTextFile() -> Data? {
+        let responses = condenseRepsonsesToString()
+        let tempFileName = "responses.txt"
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        let tempFilePath = documentsDirectory.appendingPathComponent(tempFileName)
+        print(tempFilePath)
+        do {
+            try responses.write(to: tempFilePath, atomically: false, encoding: String.Encoding.utf8)
+        }
+        catch {
+            print("Failed to write to file!")
+        }
+        return FileManager.default.contents(atPath: tempFileName)
     }
 }
 
