@@ -6,6 +6,7 @@
 //  Copyright © 2019 Lauren White. All rights reserved.
 //
 
+import SwiftyDropbox
 import UIKit
 
 class ViewController: UIViewController {
@@ -43,6 +44,13 @@ class ViewController: UIViewController {
     
     @IBAction func uploadButtonPressed(_ sender: Any) {
         // Upload answers to dropbox
+        DropboxClientsManager.authorizeFromController(
+            UIApplication.shared,
+            controller: self,
+            openURL: { (url: URL) -> Void in
+                //UIApplication.shared.openURL(url)
+                UIApplication.shared.open(url, options: .init(), completionHandler: nil)
+        })
     }
 }
 
