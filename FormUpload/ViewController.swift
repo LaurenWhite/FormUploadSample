@@ -55,6 +55,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func logInButtonPressed(_ sender: Any) {
+        // Open Safari browser window with dropbox login screen
         DropboxClientsManager.authorizeFromController(
             UIApplication.shared,
             controller: self,
@@ -63,6 +64,7 @@ class ViewController: UIViewController {
         })
     }
     
+    // Record responses as single string, to be written into .txt file
     func condenseRepsonsesToString() -> String {
         let name = nameTextField.text ?? "N/A"
         let age = ageTextField.text ?? "N/A"
@@ -74,9 +76,11 @@ class ViewController: UIViewController {
         let responses = condenseRepsonsesToString()
         let fileData = responses.data(using: String.Encoding.utf8, allowLossyConversion: false)!
         let filePath = "/\(fileName)"
-        client = DropboxClientsManager.authorizedClient
         
-        let _ = client?.files.upload(path: filePath, mode: .overwrite,input: fileData)
+        // Access authorized client from log in
+        client = DropboxClientsManager.authorizedClient
+        // Make request for file upload, overwriting existing file
+        let _ = client?.files.upload(path: filePath, mode: .overwrite, input: fileData)
             .response { response, error in
                 if let response = response {
                     print(response)
