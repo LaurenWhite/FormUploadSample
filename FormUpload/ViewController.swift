@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     
     // Dropbox variables
     var client: DropboxClient?
+    var dropboxSupport: DropboxSupport?
     
     // File variables
     let fileName = "responses.txt"
@@ -27,14 +28,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        uploadButton.isEnabled = false
+        uploadButton.isEnabled = true
+        dropboxSupport = DropboxSupport(viewController: self)
     }
     
     func toggleUploadButtonAvailablity() {
-        uploadButton.isEnabled =
-            (nameTextField.text != "") &&
-            (ageTextField.text != "") &&
-            (majorTextField.text != "")
+//        uploadButton.isEnabled =
+//            (nameTextField.text != "") &&
+//            (ageTextField.text != "") &&
+//            (majorTextField.text != "")
     }
 
     @IBAction func nameTextFieldChanged(_ sender: Any) {
@@ -51,17 +53,14 @@ class ViewController: UIViewController {
     
     @IBAction func uploadButtonPressed(_ sender: Any) {
         // Upload form responses to dropbox
-        uploadFileToDropbox()
+        let responses = condenseRepsonsesToString()
+        let fileData = responses.data(using: String.Encoding.utf8, allowLossyConversion: false)!
+        dropboxSupport?.uploadDataToDropbox(data: fileData, fileName: "newResponses", mode: .overwrite)
     }
     
     @IBAction func logInButtonPressed(_ sender: Any) {
         // Open Safari browser window with dropbox login screen
-        DropboxClientsManager.authorizeFromController(
-            UIApplication.shared,
-            controller: self,
-            openURL: { (url: URL) -> Void in
-                UIApplication.shared.open(url, options: .init(), completionHandler: nil)
-        })
+        dropboxSupport?.initiateLoginRequest()
     }
     
     // Record responses as single string, to be written into .txt file
@@ -70,27 +69,6 @@ class ViewController: UIViewController {
         let age = ageTextField.text ?? "N/A"
         let major = majorTextField.text ?? "N/A"
         return "Name:\(name)  Age:\(age)  Major:\(major)"
-    }
-    
-    func uploadFileToDropbox() {
-        let responses = condenseRepsonsesToString()
-        let fileData = responses.data(using: String.Encoding.utf8, allowLossyConversion: false)!
-        let filePath = "/\(fileName)"
-        
-        // Access authorized client from log in
-        client = DropboxClientsManager.authorizedClient
-        // Make request for file upload, overwriting existing file
-        let _ = client?.files.upload(path: filePath, mode: .overwrite, input: fileData)
-            .response { response, error in
-                if let response = response {
-                    print(response)
-                } else if let error = error {
-                    print(error)
-                }
-            }
-            .progress { progressData in
-                print(progressData)
-        }
     }
 }
 
