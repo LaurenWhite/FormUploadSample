@@ -28,13 +28,16 @@ class DropboxSupport {
     var client: DropboxClient?
     
     /// The view controller from which this support class is being used.
-    var viewController: ViewController
+    var viewController: ViewController?
     
+    /// Toggle alerts.
+    var alertsOn: Bool
     
     ///  Initialize the DropboxSupport class from the view controller that is using it.
     ///  Register observers for custrom Dropbox account login status updates.
-    init(viewController: ViewController) {
+    init(viewController: ViewController?) {
         self.viewController = viewController
+        self.alertsOn = false
         NotificationCenter.default.addObserver(self, selector: #selector(loginDidSucceed), name: .authorizationDidSucceed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loginWasCanceled), name: .authorizationWasCanceled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loginDidFail(_:)), name: .authorizationDidFail, object: nil)
@@ -91,8 +94,10 @@ class DropboxSupport {
     /// - parameter fileName: The name the file should be saved under.
     /// - parameter folders: An array of any folders the file should be in.
     /// - parameter mode: The file write mode (add, overwrite, update).
+    /// - parameter result:  Completion handler for result of upload attempt.
     ///
-    func uploadDataToDropbox(data: Data, fileName: String, folders: [String] = [], mode: Files.WriteMode = .add) {
+    func uploadDataToDropbox(data: Data, fileName: String, folders: [String] = [], mode: Files.WriteMode = .add, completion: @escaping (_ result: Bool) -> Void) {
+        
         // Generate the file path using the given file folders and file name
         var pathComponents = folders
         pathComponents.append(fileName)
@@ -105,9 +110,11 @@ class DropboxSupport {
         let request = client?.files.upload(path: filePath, mode: mode, input: data)
             .response { response, error in
                 if let response = response {
+                    completion(true)
                     self.presentUploadSuccessAlert()
                     print(response)
                 } else if let error = error {
+                    completion(false)
                     self.presentUploadFailureAlert()
                     print(error)
                 }
@@ -121,18 +128,21 @@ class DropboxSupport {
     /// Called when observer receives notifcation that the user logged in.
     /// Displays an alert updating the user.
     @objc func loginDidSucceed() {
+        guard alertsOn else { return }
         presentLoginSuccessAlert()
     }
 
     /// Called when observer receives notifcation that the user canceled logged in.
     /// Displays an alert updating the user.
     @objc func loginWasCanceled() {
+        guard alertsOn else { return }
         presentLoginWasCanceledAlert()
     }
     
     /// Called when observer receives notifcation that the user failed to login.
     /// Displays an alert updating the user.
     @objc func loginDidFail(_ notification: Notification) {
+        guard alertsOn else { return }
         guard let data = notification.userInfo as? [String: String],
           let error = data["error"]
         else { return }
@@ -148,7 +158,7 @@ class DropboxSupport {
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
             NSLog("The file was successfully uploaded to Dropbox.")
         }))
-        viewController.present(alert, animated: true, completion: nil)
+        viewController?.present(alert, animated: true, completion: nil)
     }
     
     private func presentUploadFailureAlert() {
@@ -156,7 +166,7 @@ class DropboxSupport {
         alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Default action"), style: .destructive, handler: { _ in
             NSLog("The file was successfully uploaded to Dropbox.")
         }))
-        viewController.present(alert, animated: true, completion: nil)
+        viewController?.present(alert, animated: true, completion: nil)
     }
     
     private func presentLoginSuccessAlert() {
@@ -164,7 +174,7 @@ class DropboxSupport {
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
             NSLog("Success! User is logged into Dropbox.")
         }))
-        viewController.present(alert, animated: true, completion: nil)
+        viewController?.present(alert, animated: true, completion: nil)
     }
     
     private func presentLoginWasCanceledAlert() {
@@ -172,7 +182,7 @@ class DropboxSupport {
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
             NSLog("Authorization flow was manually canceled by user!")
         }))
-        viewController.present(alert, animated: true, completion: nil)
+        viewController?.present(alert, animated: true, completion: nil)
     }
     
     private func presentLoginFailedAlert(error: String) {
@@ -180,6 +190,6 @@ class DropboxSupport {
         alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Default action"), style: .destructive, handler: { _ in
             NSLog("Login failed with error: \(error)")
         }))
-        viewController.present(alert, animated: true, completion: nil)
+        viewController?.present(alert, animated: true, completion: nil)
     }
 }

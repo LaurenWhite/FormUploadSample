@@ -6,17 +6,27 @@
 //  Copyright © 2019 Lauren White. All rights reserved.
 //
 
-import SwiftyDropbox
 import UIKit
+import Network
 
 class ViewController: UIViewController {
     
     // Dropbox variables
-    var client: DropboxClient?
     var dropboxSupport: DropboxSupport?
     
+    let database = Database()
+    
     // File variables
-    let fileName = "responses.txt"
+    var fileName: String?
+    
+    var timestamp: String {
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = formatter.string(from: now)
+        return dateString
+    }
     
     // MARK - UI Outlets
     @IBOutlet var nameTextField: UITextField!
@@ -28,15 +38,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        uploadButton.isEnabled = true
+        uploadButton.isEnabled = false
         dropboxSupport = DropboxSupport(viewController: self)
     }
     
     func toggleUploadButtonAvailablity() {
-//        uploadButton.isEnabled =
-//            (nameTextField.text != "") &&
-//            (ageTextField.text != "") &&
-//            (majorTextField.text != "")
+        uploadButton.isEnabled =
+            (nameTextField.text != "") &&
+            (ageTextField.text != "") &&
+            (majorTextField.text != "")
     }
 
     @IBAction func nameTextFieldChanged(_ sender: Any) {
@@ -53,9 +63,11 @@ class ViewController: UIViewController {
     
     @IBAction func uploadButtonPressed(_ sender: Any) {
         // Upload form responses to dropbox
+        fileName = "responses[\(timestamp)].txt"
         let responses = condenseRepsonsesToString()
         let fileData = responses.data(using: String.Encoding.utf8, allowLossyConversion: false)!
-        dropboxSupport?.uploadDataToDropbox(data: fileData, fileName: "newResponses", mode: .overwrite)
+        let file = TextFile(name: fileName ?? "responses.txt", data: fileData)
+        database.addTextFile(file: file)
     }
     
     @IBAction func logInButtonPressed(_ sender: Any) {

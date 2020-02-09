@@ -8,13 +8,15 @@
 
 import SwiftyDropbox
 import UIKit
+import Network
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    
+    let networkSupport = NetworkSupport.shared()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         DropboxClientsManager.setupWithAppKey("ohgbgauiensllql")
